@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculatrice Scientifique </title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="calculator">
+        <div class="title">Calculatrice Scientifique</div>
+        <input type="text" id="result" placeholder="Saisissez une opération" disabled>
+        <input id="taux" type="number" placeholder="Entrez le taux">
+        
+        <div class="icon-toggle" onclick="toggleAngleMode()">Deg/Rad</div>
+
+        <div class="buttons">
+            <button onclick="clearResult()">AC</button>
+            <button onclick="appendNumber(9)">9</button>
+            <button onclick="calculateAbsolute()">|x|</button>
+            <button onclick="clearTxt()">del</button>
+            <button onclick="appendNumber(8)">8</button>
+            <button onclick="appendNumber(7)">7</button>
+            <button onclick="appendOperator('^')">xʸ</button>
+            <button onclick="calculateLog()">log</button>
+            <button onclick="appendNumber(4)">4</button>
+            <button onclick="appendNumber(5)">5</button>
+            <button onclick="appendNumber(6)">6</button>
+            <button onclick="calculateFactorial()">x!</button>
+            <button onclick="appendNumber(1)">1</button>
+            <button onclick="appendNumber(2)">2</button>
+            <button onclick="appendNumber(3)">3</button>
+            <button onclick="appendOperator('/')">/</button>
+            <button onclick="appendPuntuation('(')">(</button>
+            <button onclick="appendPuntuation(')')">)</button>
+            <button onclick="appendPuntuation('.')">.</button>
+            <button onclick="appendOperator('+')">+</button>
+            <button onclick="calculateSquareRoot()">√x</button>
+            <button onclick="calculatePower()">x²</button>
+            <button onclick="calculateExponent()">e^x</button>
+            <button onclick="calculateModulo()">%</button>
+            <button onclick="calculateSine()">sin(x)</button>
+            <button onclick="calculateTangent()">tan(x)</button>
+            <button onclick="calculateCosine()">cos(x)</button>
+            <button onclick="calculateResult()">=</button>
+            <button onclick="saveMemory()">M+</button>
+            <button onclick="recallMemory()">MR</button>
+            <button onclick="clearMemory()">MC</button>
+                        <button onclick="appendNumber(0)">0</button>
+        </div>
+        <div class="memory-display" id="memoryDisplay">Mémoire: 0</div>
+    </div>
+
+    <script>
+        let result = document.getElementById('result');
+        let taux = document.getElementById('taux');
+        let isDegreeMode = true;
+        let memory = 0;
+
+        function toggleAngleMode() {
+            isDegreeMode = !isDegreeMode;
+            alert(isDegreeMode ? "Mode Degré activé" : "Mode Radian activé");
+        }
+
+        function appendNumber(number) {
+            result.value += number;
+        }
+
+        function appendPuntuation(punctuation) {
+            result.value += punctuation;
+        }
+
+        function appendOperator(operator) {
+            result.value += operator;
+        }
+
+        function calculateResult() {
+            try {
+                result.value = eval(result.value.replace("^", "**"));
+            } catch (error) {
+                result.value = 'calculate error';
+            }
+        }
+
+        function clearResult() {
+            result.value = '';
+        }
+
+        function clearTxt() {
+            result.value = result.value.slice(0, -1);
+        }
+
+        function calculateAbsolute() {
+            result.value = Math.abs(eval(result.value));
+        }
+
+        function calculateSquareRoot() {
+            result.value = Math.sqrt(eval(result.value));
+        }
+
+        function calculatePower() {
+            result.value = eval(result.value) ** 2;
+        }
+
+        function calculateExponent() {
+            result.value = Math.exp(eval(result.value));
+        }
+
+        function calculateCosine() {
+            let angle = eval(result.value);
+            result.value = isDegreeMode ? Math.cos(angle * Math.PI / 180) : Math.cos(angle);
+        }
+
+        function calculateSine() {
+            let angle = eval(result.value);
+            result.value = isDegreeMode ? Math.sin(angle * Math.PI / 180) : Math.sin(angle);
+        }
+
+        function calculateTangent() {
+            let angle = eval(result.value);
+            result.value = isDegreeMode ? Math.tan(angle * Math.PI / 180) : Math.tan(angle);
+        }
+
+        function calculateModulo() {
+            if (taux.value > 100) {
+                alert("Veuillez entrer un taux inférieur ou égal à 100%");
+            } else {
+                let number = parseFloat(result.value);
+                let percentage = parseFloat(taux.value);
+                result.value = (number * percentage) / 100;
+            }
+        }
+
+        function calculateLog() {
+            result.value = Math.log10(eval(result.value));
+        }
+
+        function calculateFactorial() {
+            let num = eval(result.value);
+            if (num < 0 || num !== Math.floor(num)) {
+                result.value = "Erreur";
+                return;
+            }
+            result.value = factorial(num);
+        }
+
+        function factorial(n) {
+            return n <= 1 ? 1 : n * factorial(n - 1);
+        }
+
+        function saveMemory() {
+            memory = parseFloat(result.value) || 0;
+            document.getElementById("memoryDisplay").textContent = "Mémoire: " + memory;
+        }
+
+        function recallMemory() {
+            result.value += memory;
+        }
+
+        function clearMemory() {
+            memory = 0;
+            document.getElementById("memoryDisplay").textContent = "Mémoire: " + memory;
+        }
+    </script>
+</body>
+</html>
